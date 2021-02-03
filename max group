@@ -1,0 +1,9 @@
+select person
+from sales
+group by person
+having count(*)=(
+  select max(*)
+  from 
+    select count(*) 
+    from sales
+    group by person)
