@@ -84,3 +84,7 @@ For 2020-06-02, Sold item is (Mask), we just return it.
 select sell_date ,count(distinct(product)) as num_sold, group_concat(distinct(product)) as products
 from activities
 group by sell_date
+
+
+point:
+1.mysql rank should be "" or it is a keyword too.
