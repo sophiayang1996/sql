@@ -1,7 +1,7 @@
 lag(a,num,"default") over(partition by b order by c)
-
 former num record，按照b分组，按照c排序后的第前n条数据，每个组第Num-1都是default值（无default就是null）
 
 lead(a,num,"default) over (partition by b order by c)
-
 latter num record
+
+在连续问题上非常好用
