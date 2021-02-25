@@ -1,7 +1,18 @@
+1.lag
 lag(a,num,"default") over(partition by b order by c)
 former num record，按照b分组，按照c排序后的第前n条数据，每个组第Num-1都是default值（无default就是null）
 
+2.lead
 lead(a,num,"default) over (partition by b order by c)
 latter num record
 
 在连续问题上非常好用
+
+3.coalesce
+coalesce(expression1,expression2,..)
+返回不为空的值，如果都是空，则为null
+
+4.denode
+denode(expression,value1,a,value2,b..)
+如果表达式等于value1，则返回a，以此类推
+
