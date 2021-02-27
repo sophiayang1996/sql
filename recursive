@@ -48,3 +48,8 @@ WITH RECURSIVE seq AS (
 SELECT n AS ids
 FROM seq
 WHERE n NOT IN (SELECT DISTINCT customer_id FROM Customers)
+
+
+
+注意要with多个cte的时候只有一个with，每一个都要加上“，”
+
