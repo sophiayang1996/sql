@@ -12,7 +12,11 @@ latter num record
 coalesce(expression1,expression2,..)
 返回不为空的值，如果都是空，则为null
 
-4.denode
-denode(expression,value1,a,value2,b..)
+4.decode
+decode(expression,value1,a,value2,b..)
 如果表达式等于value1，则返回a，以此类推
+
+5.nion, except
+比较像not in 但是是select恰好是not in限制的
+
 
