@@ -7,3 +7,24 @@ having count(*)=(
     select count(*) 
     from sales
     group by person)
+    
+select person
+from sales 
+group by person
+having count(*) = (
+  select count(*) cnt
+  from sales 
+  group by person
+  order by cnt 
+  limit 1)
+  
+  
+select person
+from sales s
+join (
+  select p_id, count(*) cnt
+  from sales
+  group by person
+  order by cnt
+  limit 1) f1
+on s.p_id = f1,p_id
