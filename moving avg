@@ -59,30 +59,24 @@ Result table:
 4th moving average from 2019-01-04 to 2019-01-10 has an average_amount of (130 + 110 + 140 + 150 + 80 + 110 + 130 + 150)/7 = 142.86
 
 
+answer:
 
-WITH cal AS (SELECT DISTINCT visited_on, 
-      SUM(amount) OVER (ORDER BY visited_on RANGE BETWEEN INTERVAL 6 DAY PRECEDING AND CURRENT ROW) amount, 
-      ROUND( SUM(amount) OVER (ORDER BY visited_on RANGE BETWEEN INTERVAL 6 DAY PRECEDING AND CURRENT ROW)/7,2) average_amount
-      FROM Customer)
+select visited_on, amount, average_amount
+from (
+    select visited_on, 
+        sum(sum(amount)) over(order by visited_on rows between 6 preceding and current row) amount,
+        round(avg(sum(amount)) over(order by visited_on rows between 6 preceding and current row),2) average_amount,
+    row_number() over(order by visited_on asc) rn
+    from customer
+    group by visited_on) f1
+where rn>6
+order by visited_on
 
-SELECT * FROM cal
-WHERE visited_on >= (SELECT visited_on FROM Customer ORDER BY 1 LIMIT 1) + 6
-ORDER BY 1
 
-
-windows_func
+windows_func对一个范围计算（moving）：over（rows between 6 preceding and current row)
 
 points:
 rows between 6 preceding and current row
 
 
-SELECT visited_on, amount, average_amount
-FROM (
-    SELECT TO_CHAR(visited_on, 'YYYY-MM-DD') AS visited_on, 
-           SUM(SUM(amount))OVER(ORDER BY visited_on RANGE BETWEEN 6 PRECEDING AND CURRENT ROW) AS amount,
-           ROUND(AVG(SUM(amount))OVER(ORDER BY visited_on RANGE BETWEEN 6 PRECEDING AND CURRENT ROW), 2) AS average_amount,
-           ROW_NUMBER()OVER(ORDER BY visited_on) AS rm
-    FROM customer
-    GROUP BY visited_on
-) a
-WHERE rm>6
+
