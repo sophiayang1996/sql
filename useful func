@@ -16,7 +16,7 @@ coalesce(expression1,expression2,..)
 decode(expression,value1,a,value2,b..)
 如果表达式等于value1，则返回a，以此类推
 
-5.nion, except
+5.union, except
 比较像not in 但是是select恰好是not in限制的
 
 
