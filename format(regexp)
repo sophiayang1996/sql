@@ -15,3 +15,8 @@ $	End of string
 p1|p2|p3	Alternation; matches any of the patterns p1, p2, or p3
 {n}	n instances of preceding element
 {m,n}	m through n instances of preceding element
+
+
+****date format
+date_format(date,"%Y-%m")
+left(date,7)
