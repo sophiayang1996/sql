@@ -1,0 +1,143 @@
+Table: Customers
+
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| customer_id   | int     |
+| customer_name | varchar |
++---------------+---------+
+customer_id is the primary key for this table.
+Each row of this table contains the name and the id customer.
+ 
+
+Write an SQL query to find the missing customer IDs. The missing IDs are ones that are not in the Customers table but are in the range between 1 and the maximum customer_id present in the table.
+
+Notice that the maximum customer_id will not exceed 100.
+
+Return the result table ordered by ids in ascending order.
+
+The query result format is in the following example.
+
+ 
+
+Customers table:
++-------------+---------------+
+| customer_id | customer_name |
++-------------+---------------+
+| 1           | Alice         |
+| 4           | Bob           |
+| 5           | Charlie       |
++-------------+---------------+
+
+Result table:
++-----+
+| ids |
++-----+
+| 2   |
+| 3   |
++-----+
+The maximum customer_id present in the table is 5, so in the range [1,5], IDs 2 and 3 are missing from the table.
+
+answer:
+
+WITH RECURSIVE seq AS (
+  SELECT 1 n
+  UNION ALL
+  SELECT n + 1 FROM seq WHERE n + 1 <= (SELECT MAX(Customer_id) FROM Customers)
+)
+SELECT n ids
+FROM seq
+WHERE n NOT IN (SELECT DISTINCT customer_id FROM Customers)
+
+
+
+注意要with多个cte的时候只有一个with，每一个都要加上“，”
+
+
+
+
+exp 2:
+Table: Tasks
+
++----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| task_id        | int     |
+| subtasks_count | int     |
++----------------+---------+
+task_id is the primary key for this table.
+Each row in this table indicates that task_id was divided into subtasks_count subtasks labelled from 1 to subtasks_count.
+It is guaranteed that 2 <= subtasks_count <= 20.
+ 
+
+Table: Executed
+
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| task_id       | int     |
+| subtask_id    | int     |
++---------------+---------+
+(task_id, subtask_id) is the primary key for this table.
+Each row in this table indicates that for the task task_id, the subtask with ID subtask_id was executed successfully.
+It is guaranteed that subtask_id <= subtasks_count for each task_id.
+ 
+
+Write an SQL query to report the IDs of the missing subtasks for each task_id.
+
+Return the result table in any order.
+
+The query result format is in the following example:
+
+ 
+
+Tasks table:
++---------+----------------+
+| task_id | subtasks_count |
++---------+----------------+
+| 1       | 3              |
+| 2       | 2              |
+| 3       | 4              |
++---------+----------------+
+
+Executed table:
++---------+------------+
+| task_id | subtask_id |
++---------+------------+
+| 1       | 2          |
+| 3       | 1          |
+| 3       | 2          |
+| 3       | 3          |
+| 3       | 4          |
++---------+------------+
+
+Result table:
++---------+------------+
+| task_id | subtask_id |
++---------+------------+
+| 1       | 1          |
+| 1       | 3          |
+| 2       | 1          |
+| 2       | 2          |
++---------+------------+
+Task 1 was divided into 3 subtasks (1, 2, 3). Only subtask 2 was executed successfully, so we include (1, 1) and (1, 3) in the answer.
+Task 2 was divided into 2 subtasks (1, 2). No subtask was executed successfully, so we include (2, 1) and (2, 2) in the answer.
+Task 3 was divided into 4 subtasks (1, 2, 3, 4). All of the subtasks were executed successfully.
+
+answer:
+
+with recursive cte as(
+    select task_id, subtasks_count n
+    from tasks
+    union all
+    select task_id, n-1 n
+    from cte
+    where n > 1)
+
+select cte.task_id, n subtask_id
+from cte
+left join executed e
+on cte.task_id = e.task_id
+and cte.n = e.subtask_id
+where e.subtask_id is null
+
