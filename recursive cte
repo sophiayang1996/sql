@@ -43,14 +43,14 @@ answer:
 WITH RECURSIVE seq AS (
   SELECT 1 n
   UNION ALL
-  SELECT n + 1 FROM seq WHERE n + 1 <= (SELECT MAX(Customer_id) FROM Customers)
+  SELECT n + 1 FROM seq WHERE n + 1 < (SELECT MAX(Customer_id) FROM Customers)
 )
 SELECT n ids
 FROM seq
 WHERE n NOT IN (SELECT DISTINCT customer_id FROM Customers)
 
 
-
+最后一个值是=max
 注意要with多个cte的时候只有一个with，每一个都要加上“，”
 
 
@@ -141,6 +141,8 @@ on cte.task_id = e.task_id
 and cte.n = e.subtask_id
 where e.subtask_id is null
 
+注意最后返回值是n=1
+
 
 
 
@@ -175,6 +177,7 @@ WITH RECURSIVE employee_paths AS
             lvl+1
      FROM employees e
      INNER JOIN employee_paths ep ON ep.employeeNumber = e.reportsTo )
+     
 SELECT employeeNumber,
        managerNumber,
        lvl,
@@ -183,3 +186,5 @@ FROM employee_paths ep
 INNER JOIN offices o USING (officeCode)
 ORDER BY lvl, city;
 
+recursive的循环在where 比较符号中，与while的逻辑是一样的，return最后的是不满足的，所以<最后一个值是=
+所以在1-12中，where n<12
