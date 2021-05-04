@@ -188,3 +188,8 @@ ORDER BY lvl, city;
 
 recursive的循环在where 比较符号中，与while的逻辑是一样的，return最后的是不满足的，所以<最后一个值是=
 所以在1-12中，where n<12
+
+
+
+
+
