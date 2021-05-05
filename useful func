@@ -22,8 +22,12 @@ decode(expression,value1,a,value2,b..)
 6.concat
 concat(ye,"-12-31")
 
-7.datediff, dayofyear
+7.datediff, dayofyear, to_days
 datediff(big,small)
 dayofyear(concat(yr,"-12-31))
+
+8.cast
+cast(yr as char)
+cast(dt as signed)在加减问题上，回由bingint unsigned的问题 需要cast as signed
 
 
