@@ -1,0 +1,13 @@
+1. 单列 转 pivot
+case when then end col1
+case when then end col2
+
+2. pivot 转单列
+union all
+
+3. 计算filter满足数量（分类个数）
+sum(condition1) col1, sum(condition2) col2
+
+4. 根据col1汇总col2
+sum(case when col1 condition1 then col2 end) col3
+
