@@ -1,3 +1,6 @@
+*********************************************************************************************************************************************************************
+eg1:
+
 Table: Customers
 
 +---------------+---------+
@@ -16,9 +19,7 @@ Notice that the maximum customer_id will not exceed 100.
 
 Return the result table ordered by ids in ascending order.
 
-The query result format is in the following example.
-
- 
+The query result format is in the following example. 
 
 Customers table:
 +-------------+---------------+
@@ -55,8 +56,8 @@ WHERE n NOT IN (SELECT DISTINCT customer_id FROM Customers)
 
 
 
-
-exp 2:
+***********************************************************************************************************************************************************************
+eg 2:
 Table: Tasks
 
 +----------------+---------+
@@ -67,8 +68,7 @@ Table: Tasks
 +----------------+---------+
 task_id is the primary key for this table.
 Each row in this table indicates that task_id was divided into subtasks_count subtasks labelled from 1 to subtasks_count.
-It is guaranteed that 2 <= subtasks_count <= 20.
- 
+It is guaranteed that 2 <= subtasks_count <= 20. 
 
 Table: Executed
 
@@ -88,7 +88,6 @@ Write an SQL query to report the IDs of the missing subtasks for each task_id.
 Return the result table in any order.
 
 The query result format is in the following example:
-
  
 
 Tasks table:
@@ -162,7 +161,10 @@ Then, execute the recursive member with Ri result set as an input and make Ri+1 
 After that, repeat the third step until the recursive member returns an empty result set, in other words, the termination condition is met.
 Finally, combine result sets from R0 to Rn using UNION ALL operator.
 
-eg.
+
+
+************************************************************************************************************************************************************************
+eg3.
 WITH RECURSIVE employee_paths AS
   ( SELECT employeeNumber,
            reportsTo managerNumber,
@@ -190,6 +192,98 @@ recursive的循环在where 比较符号中，与while的逻辑是一样的，ret
 所以在1-12中，where n<12
 
 
+*******************************************************************************************************************************************************************
+eg4:
 
+Table: Product
+
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| product_id    | int     |
+| product_name  | varchar |
++---------------+---------+
+product_id is the primary key for this table.
+product_name is the name of the product.
+ 
+
+Table: Sales
+
++---------------------+---------+
+| Column Name         | Type    |
++---------------------+---------+
+| product_id          | int     |
+| period_start        | date    |
+| period_end          | date    |
+| average_daily_sales | int     |
++---------------------+---------+
+product_id is the primary key for this table. 
+period_start and period_end indicates the start and end date for sales period, both dates are inclusive.
+The average_daily_sales column holds the average daily sales amount of the items for the period.
+
+Write an SQL query to report the Total sales amount of each item for each year, with corresponding product name, product_id, product_name and report_year.
+
+Dates of the sales years are between 2018 to 2020. Return the result table ordered by product_id and report_year.
+
+The query result format is in the following example:
+
+Product table:
++------------+--------------+
+| product_id | product_name |
++------------+--------------+
+| 1          | LC Phone     |
+| 2          | LC T-Shirt   |
+| 3          | LC Keychain  |
++------------+--------------+
+
+Sales table:
++------------+--------------+-------------+---------------------+
+| product_id | period_start | period_end  | average_daily_sales |
++------------+--------------+-------------+---------------------+
+| 1          | 2019-01-25   | 2019-02-28  | 100                 |
+| 2          | 2018-12-01   | 2020-01-01  | 10                  |
+| 3          | 2019-12-01   | 2020-01-31  | 1                   |
++------------+--------------+-------------+---------------------+
+
+Result table:
++------------+--------------+-------------+--------------+
+| product_id | product_name | report_year | total_amount |
++------------+--------------+-------------+--------------+
+| 1          | LC Phone     |    2019     | 3500         |
+| 2          | LC T-Shirt   |    2018     | 310          |
+| 2          | LC T-Shirt   |    2019     | 3650         |
+| 2          | LC T-Shirt   |    2020     | 10           |
+| 3          | LC Keychain  |    2019     | 31           |
+| 3          | LC Keychain  |    2020     | 31           |
++------------+--------------+-------------+--------------+
+
+
+
+answer:
+
+# Write your MySQL query statement below
+
+with recursive yearin as (
+    select product_id, year(period_start) yr, period_end
+    from sales s
+    union all
+    select product_id, yr+1,  period_end
+    from yearin
+    where yr < year(period_end))
+    
+select cast(p.product_id as char) product_id, product_name, cast(yr as char) report_year, 
+(case 
+    when yr = year(period_start) and yr = year(s.period_end) then (datediff(s.period_end,period_start)+1) * average_daily_sales
+    when yr = year(period_start) and yr!= year(s.period_end) then
+(datediff(concat(yr,"-12-31"),period_start)+1)* average_daily_sales
+    when yr = year(s.period_end) and yr!= year(period_start) then
+(datediff(s.period_end, concat(yr,"-01-01"))+1)*average_daily_sales 
+    else dayofyear(concat(yr,"-12-31"))*average_daily_sales end)  total_amount
+from product p
+join sales s
+on p.product_id = s.product_id
+join yearin y
+on y.product_id = s.product_id 
+order by product_id, report_year
 
 
