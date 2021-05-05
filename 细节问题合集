@@ -7,4 +7,5 @@ case when跟 if一样具有条件传承，第二个when是不满足第一个条�
 3.在一个query中两个table有相同的名字，需要取alias
 select q.id, q.year, npv.year 就会显示重复
 
-4.
+4.mysql 没有 full join 
+需要用union or union all
