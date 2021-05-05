@@ -1,4 +1,4 @@
 select a,b
-from (select a,b, rank() over(partition by group order by a) ra
+from (select a,b, row_number() over(partition by group order by a) ra
   from db)
  where ra<= N
