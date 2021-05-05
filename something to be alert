@@ -1,4 +1,0 @@
-1.count(distinct sth)
-count 和distinct之间不能有空格，而且select之中可以在任何位置，多个
-
-2.
