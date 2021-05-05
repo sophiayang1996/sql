@@ -1,3 +1,7 @@
+*********************************************************************************************************************************************************************
+
+EG1:
+
 Table: Players
 
 +-------------+-------+
@@ -66,10 +70,34 @@ Result table:
 | 3         | 40         |
 +-----------+------------+
 
+answer:
+
+# Write your MySQL query statement below
+
+select group_id, player_id
+from (
+    select group_id, player_id, row_number() over(partition by group_id order by sum(score) desc, player_id) rk
+    from players p
+    join (
+        select first_player id, first_score score
+        from matches
+        union all
+        select second_player id, second_score score
+        from matches ) f1
+    on p.player_id = f1.id 
+    group by group_id, player_id) f2
+where rk = 1
+
+ tips:
+ union all
+ group max 问题 rk=1 （limit 1 row_number 如果不limit1就是rank())
+ 
 
 
 
-question 2:
+**********************************************************************************************************************************************************************
+EG2:
+
 transactons
 
 Table: Users
