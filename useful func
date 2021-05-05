@@ -19,4 +19,11 @@ decode(expression,value1,a,value2,b..)
 5.union, except
 比较像not in 但是是select恰好是not in限制的
 
+6.concat
+concat(ye,"-12-31")
+
+7.datediff, dayofyear
+datediff(big,small)
+dayofyear(concat(yr,"-12-31))
+
 
