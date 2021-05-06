@@ -9,3 +9,5 @@ select q.id, q.year, npv.year 就会显示重复
 
 4.mysql 没有 full join 
 需要用union or union all
+
+5. select from join 注意括号问题， join的两个sub是不需要小括号的
